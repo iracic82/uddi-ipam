@@ -54,6 +54,11 @@ variable "tgw" {
   type = bool
 }
 
+variable "internet" {
+  description = "Conditional resource"
+  type = bool
+}
+
 variable "igw_name" {
   description = "Name of IGW"
   default = ""

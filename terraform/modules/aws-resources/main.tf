@@ -23,7 +23,8 @@ data "aws_availability_zones" "available" {}
 resource "aws_vpc" "vpc1" {
   cidr_block = var.aws_vpc_cidr
   tags = {
-    "Name" = var.aws_vpc_name
+    "Name" = var.aws_vpc_name,
+    "ResourceOwner" = "iracic@infoblox.com"
   }
 }
 
@@ -33,15 +34,18 @@ resource "aws_subnet" "subnet1" {
   cidr_block = var.aws_subnet_cidr
   availability_zone       = "${data.aws_availability_zones.available.names[0]}"
   tags = {
-    "Name" = var.aws_subnet_name
+    "Name" = var.aws_subnet_name,
+    "ResourceOwner" = "iracic@infoblox.com"
   }
 }
 
 # Create a IGW
 resource "aws_internet_gateway" "igw" {
+  count = var.internet ? 1 : 0
   vpc_id = aws_vpc.vpc1.id
   tags = {
-    "Name" = var.igw_name
+    "Name" = var.igw_name,
+    "ResourceOwner" = "iracic@infoblox.com"
   }
 }
 
@@ -49,7 +53,8 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_route_table" "rt_vpc1" {
   vpc_id = aws_vpc.vpc1.id
   tags = {
-    "Name" = var.rt_name
+    "Name" = var.rt_name,
+    "ResourceOwner" = "iracic@infoblox.com"
   }
 }
 
@@ -61,8 +66,9 @@ resource "aws_route_table_association" "rt_association_vpc1" {
 
 # Create a Route Default Route
 resource "aws_route" "route_igw" {
+  count = var.internet ? 1 : 0
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.igw.id
+  gateway_id             = aws_internet_gateway.igw[0].id
   route_table_id         = aws_route_table.rt_vpc1.id
 }
 
@@ -72,7 +78,8 @@ resource "aws_network_interface" "eth1" {
   private_ips = [var.private_ip]
   security_groups = [aws_security_group.sg_allow_access_inbound.id]
   tags = {
-    Name = "primary_network_interface"
+    Name = "primary_network_interface",
+    "ResourceOwner" = "iracic@infoblox.com"
   }
 }
 
@@ -113,7 +120,9 @@ resource "aws_security_group" "sg_allow_access_inbound" {
     cidr_blocks = [
       "10.0.0.0/8",
       "20.113.88.59/32",
-      "3.141.133.108/32"
+      "3.141.133.108/32",
+      "72.14.201.91/32",
+      "85.167.61.227/32"
     ]
   }
   ingress {
@@ -123,7 +132,8 @@ resource "aws_security_group" "sg_allow_access_inbound" {
     protocol    = "tcp"
     cidr_blocks = [
       "10.0.0.0/8",
-      "20.113.88.59/32"
+      "20.113.88.59/32",
+      "72.14.201.91/32"
     ]
   }
   ingress {
@@ -133,7 +143,8 @@ resource "aws_security_group" "sg_allow_access_inbound" {
     protocol    = "udp"
     cidr_blocks = [
       "10.0.0.0/8",
-      "20.113.88.59/32"
+      "20.113.88.59/32",
+      "72.14.201.91/32"
     ]
   }
   ingress {
@@ -143,7 +154,8 @@ resource "aws_security_group" "sg_allow_access_inbound" {
     protocol    = "icmp"
     cidr_blocks = [
       "10.0.0.0/8",
-      "20.113.88.59/32"
+      "20.113.88.59/32",
+      "72.14.201.91/32"
     ]
   }
   egress {
@@ -192,7 +204,7 @@ resource "local_sensitive_file" "private_key_pem" {
 
 */
 data "template_file" "user_data" {
-  template = file("/home/ec2-user/POC-AIG/scripts/aws-user-data.sh")
+  template = file("/home/ec2-user/Infoblox-PoC/scripts/aws-user-data.sh")
 }
 
 # Create EC2 Instance
@@ -206,7 +218,8 @@ resource "aws_instance" "ec2_linux" {
   instance_type               = var.aws_ec2_instance_type
   key_name                    = var.aws_ec2_key_pair_name
   tags = {
-    "Name" = var.aws_ec2_name
+    "Name" = var.aws_ec2_name,
+    "ResourceOwner" = "iracic@infoblox.com"
   }
 
   user_data              = "${data.template_file.user_data.rendered}"
@@ -219,6 +232,9 @@ resource "aws_eip" "eip" {
   instance                  = aws_instance.ec2_linux.id
   associate_with_private_ip = var.private_ip
   depends_on                = [aws_internet_gateway.igw]
+  tags = {
+    "ResourceOwner" = "iracic@infoblox.com"
+  }
 }
 
 

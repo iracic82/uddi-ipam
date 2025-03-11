@@ -23,16 +23,7 @@ variable private_ip {
   type = list(string)
 }
 
-variable prosimo_token {
-  type = string
-  description = "valid prosimo token - from MSP Portal"
-}
 
-
-variable prosimo_teamName {
-  type = string
-  description = "valid name of the tenant"
-}
 
 variable subscription {
   type = string
@@ -54,16 +45,6 @@ variable tenantazure {
   description = "azure tenant id"
 }
 
-
-variable Access_Key_AWS {
-  type = string
-  description = "valid AWS Key"
-}
-
-variable Access_Secret_AWS {
-  type = string
-  description = "valid AWS Secret"
-}
 variable cloud_type {
   type = string
 
