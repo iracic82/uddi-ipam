@@ -9,10 +9,6 @@ terraform {
       source = "hashicorp/azurerm"
       version = "~> 3.90.0"
     }
-    prosimo = {
-      source  = "prosimo-io/prosimo"
-      version = "~> 4.1.0"
-    }
   }
 }
 
