@@ -33,6 +33,22 @@ The module structure is also aplicable for Infoblox  resources as well which wil
 > 💡 **Use the** `internet switch` **to toggle between** **private** and **public** infrastructure deployment.
 
 
+---
+
+
+## 🔐 **Secure Authentication with AWS SSO**  
+
+✅ **This Terraform setup uses** **AWS SSO (Single Sign-On) for temporary credentials**, ensuring:  
+- No **long-lived AWS access keys** are stored in environment variables.  
+- No credentials are **hardcoded in Terraform code**.  
+- Access is **dynamically managed via AWS SSO login sessions**.  
+
+🔹 **Before running Terraform, make sure you are authenticated via AWS SSO:**  
+```sh
+aws sso login --profile your-sso-profile
+
+
+
 Every module has a possibility to spin up TGW as an option. SSH Key-pair is also created with an option to download public key to the local system.
 
 The script lets you generate SSH private key on the fly using tls_private_key resource. I see people using tls_private_key who don’t want to keep the manual activity of creating the key outside terraform - This is suitable for LAB demo. But this comes at a cost. 
