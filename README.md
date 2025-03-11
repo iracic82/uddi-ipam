@@ -66,6 +66,26 @@ Instead of manually logging in every time, run Terraform using:
 ./terraform-sso.sh apply
 ```
 
+
+## ⏰ Automating SSO Session Refresh with a Cron Job
+
+To automatically refresh AWS SSO credentials, a cron job runs the script periodically.
+
+🔹 Schedule it every hour
+
+Edit your crontab:
+
+```
+crontab -e
+```
+
+Add this line:
+
+```
+0 * * * * /path/to/terraform-sso.sh > /dev/null 2>&1
+```
+
+
 Every module has a possibility to spin up TGW as an option. SSH Key-pair is also created with an option to download public key to the local system.
 
 The script lets you generate SSH private key on the fly using tls_private_key resource. I see people using tls_private_key who don’t want to keep the manual activity of creating the key outside terraform - This is suitable for LAB demo. But this comes at a cost. 
