@@ -22,7 +22,15 @@ The module structure is also aplicable for Infoblox  resources as well which wil
 |  1x TGW ( optional ) | 1x vWAN( optional ) |
 |  3x SSH Key-Pair     | 2x SSH Key-Pair                    |
 
-NOTE: This setup can be adjusted based on the number of VPCs per region, the number of subnets per VPC, and any other requirements shaping the Infoblox POC architecture. You can also use the internet switch to toggle between private and public infrastructure deployment as needed.
+## ⚠️ **IMPORTANT NOTE** ⚠️
+
+> 🚀 **This setup is fully customizable!**  
+> You can adjust:
+> - The number of **VPCs per region**  
+> - The number of **subnets per VPC**  
+> - Any other configuration to fit the **Infoblox POC architecture**  
+>  
+> 💡 **Use the** `internet switch` **to toggle between** **private** and **public** infrastructure deployment.
 
 
 Every module has a possibility to spin up TGW as an option. SSH Key-pair is also created with an option to download public key to the local system.
