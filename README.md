@@ -46,7 +46,9 @@ The module structure is also aplicable for Infoblox  resources as well which wil
 🔹 **Before running Terraform, make sure you are authenticated via AWS SSO:**  
 ```sh
 aws sso login --profile your-sso-profile
-'''
+
+
+---
 
 
 Every module has a possibility to spin up TGW as an option. SSH Key-pair is also created with an option to download public key to the local system.
