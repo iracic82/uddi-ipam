@@ -1,7 +1,7 @@
 # Terraform Provider Infoblox.
  Website: https://infoblox.com
  
-The Terraform provider for Infoblox POC/Lab is a Terraform plugin to enable full lifecycle management of CSPs resources. The provider is maintained internally by Infoblox engineering team.
+The Terraform provider for Infoblox POC/Lab is a Terraform plugin to enable full lifecycle management of CSPs resources. The provider is maintained internally by Infoblox TME team.
 
 
 
