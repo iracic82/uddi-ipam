@@ -50,6 +50,21 @@ aws sso login --profile your-sso-profile
 
 ---
 
+## ⏳ Automatic AWS SSO Session Refresh
+
+To prevent session timeouts, an automated refresh script ensures your AWS SSO session remains active.
+
+📜 Script: terraform-sso.sh
+
+
+🚀 Running Terraform with Automatic SSO Refresh
+
+Instead of manually logging in every time, run Terraform using:
+
+```
+./terraform-sso.sh plan
+./terraform-sso.sh apply
+```
 
 Every module has a possibility to spin up TGW as an option. SSH Key-pair is also created with an option to download public key to the local system.
 
