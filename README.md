@@ -11,16 +11,19 @@ The goal is to illustrate the various capabilities of Infoblox functionalities.
 
 The Demo infrastructure used is a basic deployment that creates and manages resources in either AWS, Azure of GCP. The examples utilize standard modules from the Terraform registry to set up networking, create virtual machines, and other resources. Each example also includes a custom modular design that utilizes variables and modules to make the code reusable and scalable.
 
-The module structure is also aplicable for INfoblox  resources as well which will be treated as module. The table below is per Region setup.
+The module structure is also aplicable for Infoblox  resources as well which will be treated as module. The table below is per Region setup.
 
 |     AWS              |      Azure          |
 | -------------------- | ------------------- |
-|  6x VPC              | 2x Vnet             |
-|  2x Internet Gateway | 2x RG               |
-|  6x Subnet           | 2x Subnet           |
-|  6x Virtual Machine  | 2x Virtual Machine  |
+|  3x VPC              | 2x Vnet             |
+|  3x Internet Gateway | 2x RG               |
+|  3x Subnet           | 2x Subnet           |
+|  3x Virtual Machine  | 2x Virtual Machine  |
 |  1x TGW ( optional ) | 1x vWAN( optional ) |
-|  6x SSH Key-Pair     |                     |
+|  3x SSH Key-Pair     | 2x SSH Key-Pair                    |
+
+NOTE: This setup can be adjusted based on the number of VPCs per region, the number of subnets per VPC, and any other requirements shaping the Infoblox POC architecture. You can also use the internet switch to toggle between private and public infrastructure deployment as needed.
+
 
 Every module has a possibility to spin up TGW as an option. SSH Key-pair is also created with an option to download public key to the local system.
 
