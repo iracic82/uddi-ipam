@@ -152,9 +152,6 @@ A **detailed architecture diagram** illustrating the Infoblox Proof of Concept (
 
 
 
-### **Diagram is coming...** 🛠️  
-_(The architecture diagram will be added soon!)_
-
 
 ## Modular Framework
 
