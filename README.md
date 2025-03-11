@@ -1,13 +1,13 @@
-# Terraform Provider Alkira.
- Website: https://alkira.com
+# Terraform Provider Infoblox.
+ Website: https://infoblox.com
  
-The Terraform provider for Alkira is a Terraform plugin to enable full lifecycle management of Alkira resources. The provider is maintained internally by Alkira engineering team.
+The Terraform provider for Infoblox POC/Lab is a Terraform plugin to enable full lifecycle management of CSPs resources. The provider is maintained internally by Infoblox engineering team.
 
 
 
 
-##   AIG POC
-The goal is to illustrate the various capabilities of Alkira functionalities.
+##   Infoblox Lab Example
+The goal is to illustrate the various capabilities of Infoblox functionalities.
 
 The Demo infrastructure used is a basic deployment that creates and manages resources in either AWS, Azure of GCP. The examples utilize standard modules from the Terraform registry to set up networking, create virtual machines, and other resources. Each example also includes a custom modular design that utilizes variables and modules to make the code reusable and scalable.
 
