@@ -56,7 +56,7 @@ module "azure_instances_us" {
   }
   for_each             = var.North_US_AppSvcs_VNets
   azure_resource_group = each.value["azure_resource_group"]
-  azure_location       = "East US"
+  azure_location       = "North Europe"
   azure_vnet_name      = each.value["azure_vnet_name"]
   azure_subnet_name    = each.value["azure_subnet_name"]
   azure_instance_name  = each.value["azure_instance_name"]
