@@ -71,6 +71,7 @@ variable "EU_West_FrontEnd" {
     rt_name                     = string
     aws_subnet_name             = string
     private_ip                  = string
+    app_fqdn                    = string
     aws_ec2_name                = string
     aws_ec2_key_pair_name       = string
     aws_vpc_cidr                = string
@@ -112,4 +113,22 @@ variable "North_US_AppSvcs_VNets" {
     azure_admin_password        = string
 
   }))
+}
+
+variable "route53_domain_name" {
+  description = "The domain name for the private hosted zone"
+  type        = string
+  default     = "infoblox.local"
+}
+
+variable "enable_dns_records" {
+  description = "Enable creation of DNS records in the private hosted zone"
+  type        = bool
+  default     = false
+}
+
+variable "target_vpc_name" {
+  description = "The name of the VPC to associate with the Route 53 Private Hosted Zone (looked up via the 'Name' tag)"
+  type        = string
+  default     = "WebSvcsProdEu1"
 }
