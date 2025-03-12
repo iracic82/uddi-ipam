@@ -196,3 +196,68 @@ resource "aws_route53_record" "dns_records" {
     )
   ]
 }
+
+resource "aws_s3_bucket" "infoblox_poc" {
+
+  provider = aws.eu-west-2
+  bucket = "infoblox-poc-iracic"
+
+  tags = {
+    Name          = "Infoblox POC Bucket"
+    Environment   = "POC"
+    ResourceOwner = "iracic@infoblox.com"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "infoblox_poc" {
+
+  provider = aws.eu-west-2
+  bucket = aws_s3_bucket.infoblox_poc.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_policy" "public_access" {
+
+  provider = aws.eu-west-2
+  bucket = aws_s3_bucket.infoblox_poc.id
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::${aws_s3_bucket.infoblox_poc.bucket}/uploads/*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_s3_object" "uploaded_image" {
+
+  provider = aws.eu-west-2
+  bucket = aws_s3_bucket.infoblox_poc.id
+  key    = "uploads/image.png"
+  source = "/home/ec2-user/Infoblox-PoC/images/image.png"
+
+  tags = {
+    Name          = "Infoblox Image"
+    ResourceOwner = "iracic@infoblox.com"
+  }
+}
+
+resource "aws_route53_record" "s3_cname" {
+
+  provider = aws.eu-west-2
+  zone_id = aws_route53_zone.private_zone.id  # Use the correct hosted zone
+  name    = "infobloxs3.infolab.com"
+  type    = "CNAME"
+  ttl     = 300
+  records = ["${aws_s3_bucket.infoblox_poc.bucket}.s3.eu-west-2.amazonaws.com"]
+}
