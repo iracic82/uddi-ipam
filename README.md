@@ -13,16 +13,18 @@ The Demo infrastructure used is a basic deployment that creates and manages reso
 
 The module structure is also aplicable for Infoblox  resources as well which will be treated as module. The table below is per Region setup.
 
-| AWS                                             |      Azure          |
-|-------------------------------------------------| ------------------- |
-| 3x VPC                                          | 2x Vnet             |
-| 3x Internet Gateway                             | 2x RG               |
-| 3x Subnet                                       | 2x Subnet           |
-| 3x Virtual Machine                              | 2x Virtual Machine  |
-| 1x TGW ( optional )                             | 1x vWAN( optional ) |
-| 3x SSH Key-Pair                                 | 2x SSH Key-Pair     |
-| 1x Private Hosted zone and associaton with VPCs |                     |
-| 3x DNS A record for each EC2 App                |                     |
+| AWS                                                        |      Azure          |
+|------------------------------------------------------------| ------------------- |
+| 3x VPC                                                     | 2x Vnet             |
+| 3x Internet Gateway                                        | 2x RG               |
+| 3x Subnet                                                  | 2x Subnet           |
+| 3x Virtual Machine                                         | 2x Virtual Machine  |
+| 1x TGW ( optional )                                        | 1x vWAN( optional ) |
+| 3x SSH Key-Pair                                            | 2x SSH Key-Pair     |
+| 1x Private Hosted zone and associaton with VPCs            |                     |
+| 3x DNS A record for each EC2 App                           |                     |
+| 1x S3 bucket with image uploaded + Bucket Policy           |                     |
+| 1x DNS CNAME record for S3 bucket access via custom domain |                     |
 
 
 ## ⚠️ **IMPORTANT NOTE** ⚠️
