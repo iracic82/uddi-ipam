@@ -206,7 +206,7 @@ resource "local_sensitive_file" "private_key_pem" {
 
 */
 data "template_file" "user_data" {
-  template = file("/home/ec2-user/Infoblox-PoC/scripts/aws-user-data.sh")
+  template = file("/root/infoblox-lab/Infoblox-PoC/scripts/aws-user-data.sh")
 }
 
 # Create EC2 Instance
