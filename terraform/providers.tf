@@ -17,14 +17,14 @@ terraform {
 provider "aws" {
   region = "eu-west-1"
   alias = "eu-west-1"
-  profile = "okta-sso"
+  #profile = "okta-sso"
   #shared_credentials_files = ["./credentials"]
   #profile = "default"
 }
 provider "aws" {
   region = "eu-west-2"
   alias = "eu-west-2"
-  profile = "okta-sso"
+  #profile = "okta-sso"
   #shared_credentials_files = ["./credentials"]
   #profile = "default"
 }
@@ -32,7 +32,7 @@ provider "aws" {
 provider "aws" {
   region = "us-east-1"
   alias  = "us-east-1"
-  profile = "okta-sso"
+  #profile = "okta-sso"
   #shared_credentials_files = ["./credentials"]
   #profile = "default"
 }
@@ -40,7 +40,7 @@ provider "aws" {
 provider "aws" {
   region = "eu-west-2"
   alias = "eu-aws"
-  profile = "okta-sso"
+  #profile = "okta-sso"
   #shared_credentials_files = ["./credentials"]
   #profile = "default"
 }
