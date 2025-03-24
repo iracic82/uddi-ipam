@@ -57,6 +57,6 @@ provider "azurerm" {
   client_id       = var.client
   client_secret   = var.clientsecret
   tenant_id       = var.tenantazure
-  skip_provider_registration = "true"
+  #skip_provider_registration = "true"
 
 }
