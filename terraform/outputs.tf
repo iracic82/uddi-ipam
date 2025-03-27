@@ -12,6 +12,10 @@ output "ssh_access_azure_eu" {
   value = values(module.azure_instances_eu)[*].ssh_access
 }
 
+output "ssh_access_gcp_eu" {
+  value = values(module.gcp_instances)[*].ssh_access
+}
+
 output "vpc_ids" {
   description = "Map of VPC IDs created by the aws__instances_eu module"
   value       = { for key, instance in module.aws__instances_eu : key => instance.aws_vpc_id }
