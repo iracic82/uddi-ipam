@@ -137,6 +137,10 @@ variable "GCP_EU_North" {
   }))
 }
 
+variable "projectid" {
+  type = string
+}
+
 variable "route53_domain_name" {
   description = "The domain name for the private hosted zone"
   type        = string
