@@ -103,7 +103,7 @@ module "azure_instances_eu" {
 
 module "gcp_instances" {
   source   = "./modules/gcp-resources"
-  for_each = var.GCP_EU_North
+  for_each = local.GCP_EU_North_final
   providers = {
     google = google.gcp_instances
   }
