@@ -118,7 +118,6 @@ variable "North_US_AppSvcs_VNets" {
 variable "GCP_EU_North" {
   description = "Map of GCP instances and networking configuration per VPC"
   type = map(object({
-    gcp_project            = string
     gcp_region             = string
     gcp_zone               = string
     ssh_user               = string
