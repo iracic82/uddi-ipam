@@ -1,4 +1,10 @@
-
+locals {
+  GCP_EU_North_final = {
+    for k, v in var.GCP_EU_North : k => merge(v, {
+      gcp_project = var.projectid
+    })
+  }
+}
 
 # Create EC2 and Networking Infrastructure in AWS
 
