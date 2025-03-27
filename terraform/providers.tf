@@ -9,7 +9,17 @@ terraform {
       source = "hashicorp/azurerm"
       version = "~> 3.90.0"
     }
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.0" # or latest stable
   }
+}
+
+provider "google" {
+  alias   = "gcp_instances"
+  project = null
+  region  = null
+  zone    = null
 }
 
 
