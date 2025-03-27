@@ -167,7 +167,6 @@ North_EU_AppSvcs_VNets = {
 
 GCP_EU_North = {
   VPC1 = {
-    gcp_project    = "gcp-pm-dev-413001"
     gcp_region     = "europe-north1"
     gcp_zone       = "europe-north1-a"
     ssh_user       = "terraform"
