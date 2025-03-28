@@ -20,5 +20,5 @@ output "gcp_instance_public_ip" {
 
 output "ssh_access" {
   description = "SSH command to access the GCP instance"
-  value       = "${var.instance_name} - ${var.private_ip} => ssh -i '${var.ssh_user}.pem' ${var.ssh_user}@${google_compute_address.static_ip.address}"
+  value       = "${var.instance_name} - ${var.private_ip} => ssh -i '${var.instance_name}.pem' ${var.ssh_user}@${google_compute_address.static_ip.address}"
 }
