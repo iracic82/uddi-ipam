@@ -71,6 +71,7 @@ module "azure_instances_us" {
   azure_vm_size        = "Standard_DS1_v2"
   azure_admin_username = "linuxuser"
   azure_admin_password = "admin123"
+  enable_peering = each.value["enable_peering"]
 
   azure_subnet_cidr    = each.value["azure_subnet_cidr"]
   azure_vnet_cidr      = each.value["azure_vnet_cidr"]
@@ -93,6 +94,7 @@ module "azure_instances_eu" {
   azure_vm_size        = "Standard_DS1_v2"
   azure_admin_username = "linuxuser"
   azure_admin_password = "admin123"
+  enable_peering = each.value["enable_peering"]
 
   azure_subnet_cidr    = each.value["azure_subnet_cidr"]
   azure_vnet_cidr      = each.value["azure_vnet_cidr"]
