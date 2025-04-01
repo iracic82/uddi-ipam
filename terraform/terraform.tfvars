@@ -148,6 +148,7 @@ North_EU_AppSvcs_VNets = {
     azure_subnet_cidr           = "10.10.1.0/24"
     azure_vnet_cidr             = "10.10.0.0/16"
     azure_private_ip            = "10.10.1.100"
+    enable_peering              = true
   },
   Vnet2 = {
     azure_resource_group        = "WebProdEu2"
@@ -162,6 +163,7 @@ North_EU_AppSvcs_VNets = {
     azure_subnet_cidr           = "10.30.1.0/24"
     azure_vnet_cidr             = "10.30.0.0/16"
     azure_private_ip            = "10.30.1.100"
+    enable_peering              = true
   }
 }
 
