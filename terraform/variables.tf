@@ -93,6 +93,7 @@ variable "North_EU_AppSvcs_VNets" {
     azure_subnet_cidr           = string
     azure_vnet_cidr             = string
     azure_admin_password        = string
+    enable_peering              = bool
 
   }))
 }
@@ -111,6 +112,7 @@ variable "North_US_AppSvcs_VNets" {
     azure_subnet_cidr           = string
     azure_vnet_cidr             = string
     azure_admin_password        = string
+    enable_peering              = bool
 
   }))
 }
