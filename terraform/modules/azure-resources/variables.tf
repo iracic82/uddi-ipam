@@ -63,3 +63,20 @@ variable "azure_admin_password" {
   description = "Admin Password for Instance"
   type        = string
 }
+
+# Add the enable_peering flag to your module
+variable "enable_peering" {
+  type    = bool
+  default = false  # Default to false if not specified
+}
+
+variable "tags" {
+  description = "Common tags applied to all Azure resources"
+  type        = map(string)
+  default = {
+    Environment   = "Production"
+    Owner         = "iracic@infoblox.com"
+    Project       = "Infoblox-POC"
+    ManagedBy     = "Terraform-TME"
+  }
+}
