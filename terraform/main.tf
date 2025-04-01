@@ -148,9 +148,67 @@ tags = {
 
 
 # Create TGW Route Table
+
 resource "aws_ec2_transit_gateway_route_table" "tgw_rt" {
-  provider = aws.us-east-1
-  transit_gateway_id = aws_ec2_transit_gateway.us.id
+  provider = aws.eu-aws
+  transit_gateway_id = aws_ec2_transit_gateway.eu.id
+
+  tags = {
+    Name = "EU-TGW-RouteTable"
+  }
+}
+
+# Attach multiple VPCs to TGW using for_each
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "tgw_attachments" {
+  provider            = aws.eu-aws
+  for_each            = module.aws__instances_eu  # ✅ Loops through ALL VPCs
+  subnet_ids          = [each.value.subnet_id]
+  transit_gateway_id  = aws_ec2_transit_gateway.eu.id
+  vpc_id              = each.value.aws_vpc_id
+
+  appliance_mode_support = "enable"
+  dns_support            = "enable"
+  ipv6_support           = "disable"
+
+  tags = {
+    Name = "${each.value.aws_vpc_name}-TGW-Attachment"
+  }
+}
+
+# Associate ALL VPC Attachments with the TGW Route Table
+resource "aws_ec2_transit_gateway_route_table_association" "tgw_rt_associations" {
+  provider = aws.eu-aws
+  for_each = aws_ec2_transit_gateway_vpc_attachment.tgw_attachments  # ✅ Loops through ALL TGW attachments
+
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.tgw_rt.id
+  transit_gateway_attachment_id  = each.value.id
+}
+
+# Create Routes in each VPC to send traffic to TGW
+resource "aws_route" "tgw_routes" {
+  provider = aws.eu-aws
+  for_each              = module.aws__instances_eu
+  route_table_id        = each.value.rt_id
+  destination_cidr_block = "10.20.0.0/16"  # Adjust as needed
+  transit_gateway_id     = aws_ec2_transit_gateway.eu.id
+}
+
+# Add routes in TGW Route Table for each VPC
+resource "aws_ec2_transit_gateway_route" "tgw_routes" {
+  provider = aws.eu-aws
+  for_each = module.aws__instances_eu  # ✅ Loops through all VPCs
+
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.tgw_rt.id
+  destination_cidr_block         = each.value.aws_vpc_cidr  # ✅ Ensure it routes correctly
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.tgw_attachments[each.key].id
+}
+
+/*
+# Create TGW Route Table
+resource "aws_ec2_transit_gateway_route_table" "tgw_rt" {
+  provider = aws.eu-aws
+  transit_gateway_id = aws_ec2_transit_gateway.eu.id
   tags = {
     Name = "EU-TGW-RouteTable"
   }
@@ -186,6 +244,8 @@ resource "aws_route" "tgw_route_vpc1" {
   destination_cidr_block = "10.10.0.0/16"  # Adjust for inter-VPC communication
   transit_gateway_id     = aws_ec2_transit_gateway.us.id
 }
+
+*/
 
 
 
