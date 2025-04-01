@@ -334,7 +334,7 @@ resource "aws_s3_object" "uploaded_image" {
   provider = aws.eu-west-2
   bucket = aws_s3_bucket.infoblox_poc.id
   key    = "uploads/image.png"
-  source = "/home/ec2-user/Infoblox-PoC/images/image.png"
+  source = "/root/infoblox-lab/Infoblox-PoC/scripts/images/image.png"
 
   tags = {
     Name          = "Infoblox Image"
@@ -351,3 +351,79 @@ resource "aws_route53_record" "s3_cname" {
   ttl     = 300
   records = ["${aws_s3_bucket.infoblox_poc.bucket}.s3.eu-west-2.amazonaws.com"]
 }
+
+# Azure DNS and Record creation
+
+resource "azurerm_private_dns_zone" "private_dns_zone" {
+  provider = azurerm.eun
+  name                = "infolab.com"  # Update this if needed
+  resource_group_name = module.azure_instances_eu["Vnet1"].azure_resource_group_name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "eu_vnet_links" {
+  provider = azurerm.eun
+  for_each = module.azure_instances_eu  # Now using module output directly
+
+  name                  = "${each.key}-dns-link"
+  resource_group_name   = azurerm_private_dns_zone.private_dns_zone.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone.name
+  virtual_network_id    = each.value.azure_vnet_id  # Correctly referencing the output
+  registration_enabled  = false
+}
+
+resource "azurerm_private_dns_a_record" "eu_dns_records" {
+  provider = azurerm.eun
+  for_each = var.North_EU_AppSvcs_VNets
+
+  name                = "azure-${lower(each.value.azure_instance_name)}" # Use instance name as the FQDN
+  zone_name           = azurerm_private_dns_zone.private_dns_zone.name
+  resource_group_name = var.North_EU_AppSvcs_VNets["Vnet1"].azure_resource_group
+  ttl                 = 300
+  records             = [each.value.azure_private_ip]
+}
+
+# Build connectivity across Vnets in Azure
+
+resource "azurerm_virtual_network_peering" "vnet_peering" {
+  provider = azurerm.eun
+
+  for_each = {
+    for key1, vnet1 in module.azure_instances_eu :
+    key1 => {
+      peers = {
+        for key2, vnet2 in module.azure_instances_eu : key2 => vnet2
+        if key1 != key2 && vnet1.enable_peering && vnet2.enable_peering  # ✅ Only peer enabled VNets
+      }
+    } if vnet1.enable_peering
+  }
+
+  name                         = "peering-${each.key}-to-${keys(each.value.peers)[0]}"
+  resource_group_name          = module.azure_instances_eu[each.key].azure_resource_group_name
+  virtual_network_name         = module.azure_instances_eu[each.key].azure_vnet_name
+  remote_virtual_network_id    = module.azure_instances_eu[keys(each.value.peers)[0]].azure_vnet_id
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+  allow_gateway_transit        = false
+  use_remote_gateways          = false
+}
+
+/*
+resource "azurerm_route_table" "vnet_route" {
+  provider            = azurerm.eun
+  for_each            = { for k, v in module.azure_instances_eu : k => v if v.enable_peering }
+  name                = "route-${each.key}"
+  location            = module.azure_instances_eu[each.key].azure_location
+  resource_group_name = module.azure_instances_eu[each.key].azure_resource_group_name
+}
+
+resource "azurerm_route" "peered_route" {
+  provider = azurerm.eun
+  for_each = { for k, v in module.azure_instances_eu : k => v if v.enable_peering }
+
+  name                = "route-${each.key}"
+  resource_group_name = module.azure_instances_eu[each.key].azure_resource_group_name
+  route_table_name    = azurerm_route_table.vnet_route[each.key].name
+  address_prefix      = "10.0.0.0/8"  # 🔹 Modify this based on your IP ranges
+  next_hop_type       = "VirtualNetworkGateway"
+}
+*/
