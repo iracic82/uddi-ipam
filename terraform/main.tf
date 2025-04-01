@@ -177,13 +177,13 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "tgw_attachments" {
 }
 
 # Associate ALL VPC Attachments with the TGW Route Table
-resource "aws_ec2_transit_gateway_route_table_association" "tgw_rt_associations" {
-  provider = aws.eu-aws
-  for_each = aws_ec2_transit_gateway_vpc_attachment.tgw_attachments  # ✅ Loops through ALL TGW attachments
+#resource "aws_ec2_transit_gateway_route_table_association" "tgw_rt_associations" {
+# provider = aws.eu-aws
+#  for_each = aws_ec2_transit_gateway_vpc_attachment.tgw_attachments  # ✅ Loops through ALL TGW attachments
 
-  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.tgw_rt.id
-  transit_gateway_attachment_id  = each.value.id
-}
+#  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.tgw_rt.id
+#  transit_gateway_attachment_id  = each.value.id
+#}
 
 # Create Routes in each VPC to send traffic to TGW
 resource "aws_route" "tgw_routes" {
