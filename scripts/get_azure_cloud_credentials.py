@@ -5,7 +5,7 @@ import requests
 # === Config ===
 TOKEN = os.environ.get("Infoblox_Token")
 PARTICIPANT_ID = os.environ.get("INSTRUQT_PARTICIPANT_ID")
-OUTPUT_FILE = "azure_credential_id"
+OUTPUT_FILE = "azure_cloud_credential_id"
 
 if not TOKEN:
     raise EnvironmentError("❌ 'Infoblox_Token' is not set.")
