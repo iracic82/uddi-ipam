@@ -6,13 +6,16 @@ import requests
 API_URL = "https://csp.infoblox.com/api/cloud_discovery/v2/providers"
 TOKEN = os.environ.get("Infoblox_Token")
 RESTRICTED_ACCOUNT_ID = os.environ.get("INSTRUQT_AZURE_SUBSCRIPTION_INFOBLOX_TENANT_SUBSCRIPTION_ID")
+PARTICIPANT_ID = os.environ.get("INSTRUQT_PARTICIPANT_ID")
 CLOUD_CREDENTIAL_FILE = "azure_credential_id"
 
-# === Validate Required Inputs ===
+# === Validation ===
 if not TOKEN:
     raise EnvironmentError("❌ 'Infoblox_Token' environment variable is not set.")
 if not RESTRICTED_ACCOUNT_ID:
     raise EnvironmentError("❌ 'INSTRUQT_AZURE_SUBSCRIPTION_INFOBLOX_TENANT_SUBSCRIPTION_ID' is not set.")
+if not PARTICIPANT_ID:
+    raise EnvironmentError("❌ 'INSTRUQT_PARTICIPANT_ID' environment variable is not set.")
 if not os.path.exists(CLOUD_CREDENTIAL_FILE):
     raise FileNotFoundError(f"❌ Credential ID file '{CLOUD_CREDENTIAL_FILE}' not found.")
 
@@ -20,9 +23,13 @@ if not os.path.exists(CLOUD_CREDENTIAL_FILE):
 with open(CLOUD_CREDENTIAL_FILE, "r") as f:
     CLOUD_CREDENTIAL_ID = f.read().strip()
 
+# === Dynamic names ===
+provider_name = f"Azure_Demo_Lab_{PARTICIPANT_ID}"
+view_name = f"Azure_Demo_Lab_{PARTICIPANT_ID}"
+
 # === Construct Payload ===
 payload = {
-    "name": "Azure_Demo_Lab",
+    "name": provider_name,
     "provider_type": "Microsoft Azure",
     "account_preference": "single",
     "sync_interval": "15",
@@ -101,7 +108,7 @@ payload = {
             "config": {
                 "dns": {
                     "consolidated_zone_data_enabled": False,
-                    "view_name": "Azure_Demo_Lab_IB",
+                    "view_name": view_name,
                     "sync_type": "read_write",
                     "resolver_endpoints_sync_enabled": False
                 }
@@ -117,7 +124,7 @@ headers = {
 }
 
 # === Make the POST request ===
-print("🚀 Registering Azure cloud provider with Infoblox...")
+print(f"🚀 Registering Azure cloud provider '{provider_name}' with view '{view_name}'...")
 
 response = requests.post(API_URL, headers=headers, data=json.dumps(payload))
 
