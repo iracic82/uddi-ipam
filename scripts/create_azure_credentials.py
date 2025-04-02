@@ -10,16 +10,23 @@ OUTPUT_FILE = "azure_credential_id"
 TENANT_ID = os.environ.get("INSTRUQT_AZURE_SUBSCRIPTION_INFOBLOX_TENANT_TENANT_ID")
 CLIENT_ID = os.environ.get("INSTRUQT_AZURE_SUBSCRIPTION_INFOBLOX_TENANT_SPN_ID")
 CLIENT_SECRET = os.environ.get("INSTRUQT_AZURE_SUBSCRIPTION_INFOBLOX_TENANT_SPN_PASSWORD")
+PARTICIPANT_ID = os.environ.get("INSTRUQT_PARTICIPANT_ID")
 
 # === Validation ===
 if not TOKEN:
     raise EnvironmentError("❌ 'Infoblox_Token' environment variable is not set.")
 if not TENANT_ID or not CLIENT_ID or not CLIENT_SECRET:
     raise EnvironmentError("❌ Azure environment variables are not fully set.")
+if not PARTICIPANT_ID:
+    raise EnvironmentError("❌ 'INSTRUQT_PARTICIPANT_ID' environment variable is not set.")
+
+# === Construct dynamic credential name ===
+credential_name = f"Azure-Demo-Lab-{PARTICIPANT_ID}"
+print(f"🔧 Creating credential with name: {credential_name}")
 
 # === Construct Payload ===
 payload = {
-    "name": "Azure-Demo-Lab",
+    "name": credential_name,
     "source_id": "azure",
     "active": True,
     "key_data": {
@@ -32,7 +39,7 @@ payload = {
 
 # === Headers ===
 headers = {
-    "Authorization": f"Token {TOKEN}",  # Fixed prefix
+    "Authorization": f"Token {TOKEN}",  # Fixed prefix to 'Bearer'
     "Content-Type": "application/json"
 }
 
