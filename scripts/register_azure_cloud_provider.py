@@ -7,7 +7,7 @@ API_URL = "https://csp.infoblox.com/api/cloud_discovery/v2/providers"
 TOKEN = os.environ.get("Infoblox_Token")
 RESTRICTED_ACCOUNT_ID = os.environ.get("INSTRUQT_AZURE_SUBSCRIPTION_INFOBLOX_TENANT_SUBSCRIPTION_ID")
 PARTICIPANT_ID = os.environ.get("INSTRUQT_PARTICIPANT_ID")
-CLOUD_CREDENTIAL_FILE = "azure_credential_id"
+CLOUD_CREDENTIAL_FILE = "azure_cloud_credential_id"
 
 # === Validation ===
 if not TOKEN:
