@@ -6,22 +6,29 @@ import requests
 API_URL = "https://csp.infoblox.com/api/cloud_discovery/v2/providers"
 TOKEN = os.environ.get("Infoblox_Token")
 ROLE_ARN_FILE = "infoblox_role_arn.txt"
+PARTICIPANT_ID = os.environ.get("INSTRUQT_PARTICIPANT_ID")
 
-# === Load and validate environment/config ===
+# === Validate Required Inputs ===
 if not TOKEN:
     raise EnvironmentError("❌ 'Infoblox_Token' environment variable is not set.")
-
+if not PARTICIPANT_ID:
+    raise EnvironmentError("❌ 'INSTRUQT_PARTICIPANT_ID' environment variable is not set.")
 if not os.path.isfile(ROLE_ARN_FILE):
     raise FileNotFoundError(f"❌ IAM Role ARN file not found: {ROLE_ARN_FILE}")
 
+# === Load Role ARN from file ===
 with open(ROLE_ARN_FILE, "r") as f:
     role_arn = f.read().strip()
 
 print(f"🔐 Using IAM Role ARN: {role_arn}")
+print(f"👤 Participant ID: {PARTICIPANT_ID}")
 
 # === Construct the payload ===
+provider_name = f"AWS_Demo_{PARTICIPANT_ID}"
+view_name = f"AWS_Demo_Lab_{PARTICIPANT_ID}"
+
 payload = {
-    "name": "AWS_Demo",
+    "name": provider_name,
     "provider_type": "Amazon Web Services",
     "account_preference": "single",
     "sync_interval": "15",
@@ -98,7 +105,7 @@ payload = {
             "config": {
                 "dns": {
                     "consolidated_zone_data_enabled": False,
-                    "view_name": "AWS_Demo_Lab",
+                    "view_name": view_name,
                     "sync_type": "read_write",
                     "resolver_endpoints_sync_enabled": False
                 }
@@ -119,17 +126,18 @@ print("🚀 Sending API request to register AWS cloud provider with Infoblox..."
 response = requests.post(API_URL, headers=headers, data=json.dumps(payload))
 
 # === Handle Response ===
+try:
+    response_data = response.json()
+except Exception:
+    response_data = {"raw": response.text}
+
+print(f"📦 Status Code: {response.status_code}")
+print("📥 Response:")
+print(json.dumps(response_data, indent=2))
+
 if response.status_code == 201:
-    print("✅ Cloud provider registered successfully.")
-    print(json.dumps(response.json(), indent=2))
-
+    print("✅ AWS cloud provider registered successfully.")
 elif response.status_code == 409:
-    print("⚠️ Provider already exists (409 Conflict). You may already have one configured.")
-    print(json.dumps(response.json(), indent=2))
-
+    print("⚠️ Provider already exists (409 Conflict).")
 else:
-    print(f"❌ Error {response.status_code}:")
-    try:
-        print(json.dumps(response.json(), indent=2))
-    except Exception:
-        print(response.text)
+    print("❌ Failed to register AWS cloud provider.")
