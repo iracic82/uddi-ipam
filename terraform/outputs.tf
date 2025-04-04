@@ -25,3 +25,11 @@ output "route53_dns_records_list" {
   description = "List of DNS records created"
   value       = [for record in aws_route53_record.dns_records : "${record.name} => ${tolist(record.records)[0]}"]
 }
+
+output "azure_dns_records_list" {
+  description = "List of Azure Private DNS A records created"
+  value = [
+    for name, record in azurerm_private_dns_a_record.eu_dns_records :
+    "${record.name}.${record.zone_name} => ${tolist(record.records)[0]}"
+  ]
+}
