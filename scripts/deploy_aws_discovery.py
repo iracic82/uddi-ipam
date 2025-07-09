@@ -38,6 +38,36 @@ class InfobloxSession:
         print("🔍 Current Account Info:")
         print(json.dumps(response.json(), indent=2))
 
+    def create_aws_key(self):
+        access_key_id = os.getenv("INSTRUQT_AWS_ACCOUNT_INFOBLOX_DEMO_AWS_ACCESS_KEY_ID")
+        secret_access_key = os.getenv("INSTRUQT_AWS_ACCOUNT_INFOBLOX_DEMO_AWS_SECRET_ACCESS_KEY")
+
+        if not access_key_id or not secret_access_key:
+            raise RuntimeError("❌ AWS credentials not found in environment variables.")
+
+        payload = {
+            "name": "aws-creds-instruqt",
+            "source_id": "aws",
+            "active": True,
+            "key_data": {
+                "access_key_id": access_key_id,
+                "secret_access_key": secret_access_key
+            },
+            "key_type": "id_and_secret"
+        }
+
+        response = self.session.post(
+            f"{self.base_url}/api/iam/v2/keys",
+            headers=self._auth_headers(),
+            json=payload
+        )
+
+        if response.status_code == 409:
+            print("⚠️ AWS key already exists, skipping creation.")
+        else:
+            response.raise_for_status()
+            print("🔐 AWS key created successfully.")
+
     def fetch_cloud_credential_id(self):
         url = f"{self.base_url}/api/iam/v1/cloud_credential"
         response = self.session.get(url, headers=self._auth_headers())
@@ -97,6 +127,7 @@ if __name__ == "__main__":
     session.login()
     session.switch_account()
     session.get_current_account()
+    session.create_aws_key()
     cloud_credential_id = session.fetch_cloud_credential_id()
     dns_view_id = session.fetch_dns_view_id()
     session.inject_variables_into_payload(
