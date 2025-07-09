@@ -55,6 +55,9 @@ class InfobloxCSPClient:
         self.headers["Authorization"] = f"Bearer {self.jwt}"
         print(f"🔁 Switched to sandbox account {sandbox_id}")
 
+        # ⏱️ Wait to avoid permission lag
+        time.sleep(10)  # Add 10 seconds wait to be safe
+
     def create_realm(self):
         url = f"{self.base_url}/api/ddi/v1/federation/federated_realm"
         payload = {
