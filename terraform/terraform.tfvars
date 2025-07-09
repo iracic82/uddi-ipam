@@ -146,7 +146,7 @@ North_EU_AppSvcs_VNets = {
     azure_admin_username        = "igorlinux"
     azure_admin_password        = "igorlinux"
     azure_subnet_cidr           = "10.10.1.0/24"
-    azure_vnet_cidr             = "10.10.0.0/16"
+    azure_vnet_cidr             = "10.10.1.0/24"
     azure_private_ip            = "10.10.1.100"
     enable_peering              = true
   },
@@ -160,9 +160,9 @@ North_EU_AppSvcs_VNets = {
     azure_server_key_pair_name  = "Azure_Srv2"
     azure_admin_username        = "igorlinux"
     azure_admin_password        = "igorlinux"
-    azure_subnet_cidr           = "10.30.1.0/24"
-    azure_vnet_cidr             = "10.30.0.0/16"
-    azure_private_ip            = "10.30.1.100"
+    azure_subnet_cidr           = "10.10.2.0/24"
+    azure_vnet_cidr             = "10.10.2.0/24"
+    azure_private_ip            = "10.10.2.100"
     enable_peering              = true
   }
 }
@@ -178,12 +178,12 @@ GCP_EU_North = {
     igw_name             = "Websvcs"
     rt_name              = "websvcsprodeu1-rt"
     gcp_subnet_name      = "websvcsprodeu1-subnet"
-    gcp_private_ip       = "10.20.0.100"
+    gcp_private_ip       = "10.30.0.100"
     gcp_app_fqdn         = "app1.infolab.com"
     gcp_instance_name    = "webserverprodeu1"
     gcp_vm_key_pair_name = "eu_west_webprod1_gcp"
-    gcp_vpc_cidr         = "10.20.0.0/24"
-    gcp_subnet_cidr      = "10.20.0.0/24"
+    gcp_vpc_cidr         = "10.30.0.0/24"
+    gcp_subnet_cidr      = "10.30.0.0/24"
 
     labels = {
       environment   = "prod"
