@@ -1,0 +1,36 @@
+base_url: "https://csp.infoblox.com"
+email: "${INFOBLOX_EMAIL}"
+password: "${INFOBLOX_PASSWORD}"
+sandbox_id_file: "sandbox_id.txt"
+
+realm:
+  name: "ACME Corporation"
+  comment: "Created via API with env injection"
+  tags:
+    owner: "igor"
+    env: "instruqt"
+
+blocks:
+  - name: "AWS"
+    address: "10.0.0.0"
+    cidr: 16
+    comment: "Top-level AWS block"
+    tags:
+      env: "instruqt"
+      owner: "igor"
+
+  - name: "Azure"
+    address: "10.1.0.0"
+    cidr: 16
+    comment: "Top-level Azure block"
+    tags:
+      env: "instruqt"
+      owner: "igor"
+
+  - name: "GCP"
+    address: "10.2.0.0"
+    cidr: 16
+    comment: "Top-level GCP block"
+    tags:
+      env: "instruqt"
+      owner: "igor"
