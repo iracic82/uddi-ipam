@@ -72,22 +72,30 @@ class InfobloxSession:
 
     def fetch_cloud_credential_id(self):
         url = f"{self.base_url}/api/iam/v1/cloud_credential"
-        for i in range(5):
+
+        print("⏳ Waiting up to 2 minutes for AWS Cloud Credential to appear...")
+
+        timeout = 120  # total wait time in seconds
+        interval = 10  # check every 10 seconds
+        waited = 0
+
+        while waited < timeout:
             response = self.session.get(url, headers=self._auth_headers())
             response.raise_for_status()
             creds = response.json().get("results", [])
 
-        for cred in creds:
+            for cred in creds:
                 if cred.get("credential_type") == "Amazon Web Services":
                     credential_id = cred.get("id")
                     self._save_to_file("cloud_credential_id.txt", credential_id)
-                    print(f"✅ AWS Cloud Credential ID saved: {credential_id}")
+                    print(f"✅ AWS Cloud Credential ID found and saved: {credential_id}")
                     return credential_id
 
-                print(f"⏳ Waiting for AWS Cloud Credential to appear... ({i+1}/5)")
-                time.sleep(2)
+            print(f"🕐 Still waiting... Checked at {waited}s")
+            time.sleep(interval)
+            waited += interval
 
-        raise RuntimeError("❌ Cloud Credential did not appear in time.")
+        raise RuntimeError("❌ Timed out after 3 minutes waiting for AWS Cloud Credential to appear.")
 
     def fetch_dns_view_id(self):
         url = f"{self.base_url}/api/ddi/v1/dns/view"
