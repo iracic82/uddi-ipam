@@ -70,7 +70,7 @@ resource "bloxone_ipam_ip_space" "ip_space_acme" {
 }
 
 resource "bloxone_ipam_address_block" "block_aws_vpc" {
-  address = "10.0.20.0"
+  address = "10.20.20.0"
   cidr    = 24
   name    = "aws-vpc-block"
   space   = bloxone_ipam_ip_space.ip_space_acme.id
@@ -86,7 +86,7 @@ resource "bloxone_ipam_address_block" "block_aws_vpc" {
 
 resource "bloxone_ipam_subnet" "subnet_aws_vpc" {
   next_available_id = bloxone_ipam_address_block.block_aws_vpc.id
-  cidr              = 24
+  cidr              = 26
   space             = bloxone_ipam_ip_space.ip_space_acme.id
 
   name = "aws-vpc-subnet"
