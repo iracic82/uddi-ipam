@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import time
 
 class InfobloxSession:
     def __init__(self):
@@ -70,12 +71,21 @@ class InfobloxSession:
 
     def fetch_cloud_credential_id(self):
         url = f"{self.base_url}/api/iam/v1/cloud_credential"
-        response = self.session.get(url, headers=self._auth_headers())
-        response.raise_for_status()
-        credential_id = response.json().get("results", [{}])[0].get("id")
-        self._save_to_file("cloud_credential_id.txt", credential_id)
-        print(f"✅ Cloud Credential ID saved: {credential_id}")
-        return credential_id
+        for i in range(5):
+            response = self.session.get(url, headers=self._auth_headers())
+            response.raise_for_status()
+            creds = response.json().get("results", [])
+
+        if creds:
+            credential_id = creds[0].get("id")
+            self._save_to_file("cloud_credential_id.txt", credential_id)
+            print(f"✅ Cloud Credential ID saved: {credential_id}")
+            return credential_id
+        else:
+            print(f"⏳ Waiting for Cloud Credential to appear... ({i+1}/5)")
+            time.sleep(10)
+
+        raise RuntimeError("❌ Cloud Credential did not appear in time.")
 
     def fetch_dns_view_id(self):
         url = f"{self.base_url}/api/ddi/v1/dns/view"
