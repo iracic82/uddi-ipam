@@ -11,6 +11,7 @@ class InfobloxSession:
         self.jwt = None
         self.session = requests.Session()
         self.headers = {"Content-Type": "application/json"}
+        self.account_id = os.getenv("INSTRUQT_AWS_ACCOUNT_INFOBLOX_DEMO_ACCOUNT_ID")
 
     def login(self):
         payload = {"email": self.email, "password": self.password}
@@ -97,7 +98,7 @@ class InfobloxSession:
         print(f"✅ DNS View ID saved: {dns_view_id}")
         return dns_view_id
 
-    def inject_variables_into_payload(self, template_file, output_file, dns_view_id, cloud_credential_id):
+    def inject_variables_into_payload(self, template_file, output_file, dns_view_id, cloud_credential_id, account_id):
         with open(template_file, "r") as f:
             payload = json.load(f)
 
@@ -105,6 +106,8 @@ class InfobloxSession:
         payload["destinations"][0]["config"]["dns"]["view_id"] = dns_view_id
         # Inject Cloud Credential ID
         payload["source_configs"][0]["cloud_credential_id"] = cloud_credential_id
+        # Inject Account ID
+        payload["source_configs"][0]["restricted_to_accounts"] = [account_id]
 
         with open(output_file, "w") as f:
             json.dump(payload, f, indent=2)
@@ -144,6 +147,7 @@ if __name__ == "__main__":
     session.inject_variables_into_payload(
         "payload_template.json", "payload.json",
         dns_view_id=dns_view_id,
-        cloud_credential_id=cloud_credential_id
+        cloud_credential_id=cloud_credential_id,
+        account_id=session.account_id
     )
     session.submit_discovery_job("payload.json")
