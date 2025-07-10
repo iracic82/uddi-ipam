@@ -64,30 +64,35 @@ class AzureInfobloxSession:
 
     def fetch_cloud_credential_id(self):
         url = f"{self.base_url}/api/iam/v1/cloud_credential"
-
         print("⏳ Waiting up to 2 minutes for Azure Cloud Credential to appear...")
 
-        timeout = 120  # seconds
-        interval = 10  # poll every 10s
+        timeout = 120  # total wait time in seconds
+        interval = 10  # check every 10 seconds
         waited = 0
 
         while waited < timeout:
-            response = self.session.get(url, headers=self._auth_headers())
-            response.raise_for_status()
-            creds = response.json().get("results", [])
+            try:
+                response = self.session.get(url, headers=self._auth_headers())
+                if response.status_code == 403:
+                    print("🚫 403 Forbidden – likely no access yet or propagation delay")
+                response.raise_for_status()
+                creds = response.json().get("results", [])
 
-            for cred in creds:
-                if cred.get("credential_type") == "Microsoft Azure":
-                    credential_id = cred.get("id")
-                    self._save_to_file("azure_cloud_credential_id.txt", credential_id)
-                    print(f"✅ Azure Cloud Credential ID saved: {credential_id}")
-                    return credential_id
+                for cred in creds:
+                    if cred.get("credential_type") == "Microsoft Azure":
+                        credential_id = cred.get("id")
+                        self._save_to_file("azure_cloud_credential_id.txt", credential_id)
+                        print(f"✅ Azure Cloud Credential ID found and saved: {credential_id}")
+                        return credential_id
 
-            print(f"🕒 Still waiting... Checked at {waited}s")
+            except requests.HTTPError as e:
+                print(f"❌ Error fetching credentials: {e}")
+
+            print(f"🕐 Still waiting... Checked at {waited}s")
             time.sleep(interval)
             waited += interval
 
-        raise RuntimeError("❌ Azure Cloud Credential did not appear within 3 minutes.")
+        raise RuntimeError("❌ Timed out after 2 minutes waiting for Azure Cloud Credential to appear.")
 
     def fetch_dns_view_id(self):
         url = f"{self.base_url}/api/ddi/v1/dns/view"
