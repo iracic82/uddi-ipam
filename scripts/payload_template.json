@@ -14,7 +14,7 @@
     {
       "cloud_credential_id": "{{cloud_credential_id}}",
       "restricted_to_accounts": [
-        "688458529685"
+        "{{account_id}}"
       ],
       "credential_config": {}
     }
