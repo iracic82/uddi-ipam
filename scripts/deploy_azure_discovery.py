@@ -64,7 +64,14 @@ class AzureInfobloxSession:
 
     def fetch_cloud_credential_id(self):
         url = f"{self.base_url}/api/iam/v1/cloud_credential"
-        for i in range(5):
+
+        print("⏳ Waiting up to 2 minutes for Azure Cloud Credential to appear...")
+
+        timeout = 120  # seconds
+        interval = 10  # poll every 10s
+        waited = 0
+
+        while waited < timeout:
             response = self.session.get(url, headers=self._auth_headers())
             response.raise_for_status()
             creds = response.json().get("results", [])
@@ -76,10 +83,11 @@ class AzureInfobloxSession:
                     print(f"✅ Azure Cloud Credential ID saved: {credential_id}")
                     return credential_id
 
-            print(f"⏳ Waiting for Azure Cloud Credential to appear... ({i+1}/5)")
-            time.sleep(2)
+            print(f"🕒 Still waiting... Checked at {waited}s")
+            time.sleep(interval)
+            waited += interval
 
-        raise RuntimeError("❌ Azure Cloud Credential did not appear in time.")
+        raise RuntimeError("❌ Azure Cloud Credential did not appear within 3 minutes.")
 
     def fetch_dns_view_id(self):
         url = f"{self.base_url}/api/ddi/v1/dns/view"
