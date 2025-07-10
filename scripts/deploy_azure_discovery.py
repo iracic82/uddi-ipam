@@ -69,14 +69,15 @@ class AzureInfobloxSession:
             response.raise_for_status()
             creds = response.json().get("results", [])
 
-            if creds:
-                credential_id = creds[0].get("id")
-                self._save_to_file("azure_cloud_credential_id.txt", credential_id)
-                print(f"✅ Azure Cloud Credential ID saved: {credential_id}")
-                return credential_id
-            else:
-                print(f"⏳ Waiting for Azure Cloud Credential to appear... ({i+1}/5)")
-                time.sleep(2)
+            for cred in creds:
+                if cred.get("credential_type") == "Microsoft Azure":
+                    credential_id = cred.get("id")
+                    self._save_to_file("azure_cloud_credential_id.txt", credential_id)
+                    print(f"✅ Azure Cloud Credential ID saved: {credential_id}")
+                    return credential_id
+
+            print(f"⏳ Waiting for Azure Cloud Credential to appear... ({i+1}/5)")
+            time.sleep(2)
 
         raise RuntimeError("❌ Azure Cloud Credential did not appear in time.")
 
