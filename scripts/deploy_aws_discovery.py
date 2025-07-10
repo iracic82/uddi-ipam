@@ -76,14 +76,15 @@ class InfobloxSession:
             response.raise_for_status()
             creds = response.json().get("results", [])
 
-        if creds:
-            credential_id = creds[0].get("id")
-            self._save_to_file("cloud_credential_id.txt", credential_id)
-            print(f"✅ Cloud Credential ID saved: {credential_id}")
-            return credential_id
-        else:
-            print(f"⏳ Waiting for Cloud Credential to appear... ({i+1}/5)")
-            time.sleep(10)
+        for cred in creds:
+                if cred.get("credential_type") == "Amazon Web Services":
+                    credential_id = cred.get("id")
+                    self._save_to_file("cloud_credential_id.txt", credential_id)
+                    print(f"✅ AWS Cloud Credential ID saved: {credential_id}")
+                    return credential_id
+
+                print(f"⏳ Waiting for AWS Cloud Credential to appear... ({i+1}/5)")
+                time.sleep(2)
 
         raise RuntimeError("❌ Cloud Credential did not appear in time.")
 
