@@ -34,3 +34,11 @@ blocks:
     tags:
       env: "instruqt"
       owner: "igor"
+
+  - name: "On-Prem"
+    address: "192.168.0.0"
+    cidr: 16
+    comment: "Top-level On-prem block"
+    tags:
+      env: "instruqt"
+      owner: "igor"
