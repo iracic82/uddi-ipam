@@ -67,7 +67,7 @@ class GCPInfobloxSession:
 
         if response.status_code == 409:
             print("⚠️ GCP key already exists, skipping creation.")
-        if response.status_code != 201:
+        if response.status_code != 200:
             print("❌ Failed to create GCP key:")
             print(response.status_code)
             print(response.text)
