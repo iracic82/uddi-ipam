@@ -16,17 +16,17 @@ output "ssh_access_gcp_eu" {
   value = values(module.gcp_instances)[*].ssh_access
 }
 
-output "vpc_ids" {
+output "aws_vpc_ids" {
   description = "Map of VPC IDs created by the aws__instances_eu module"
   value       = { for key, instance in module.aws__instances_eu : key => instance.aws_vpc_id }
 }
 
-output "vnet_ids" {
+output "azure_vnet_ids" {
   description = "Map of Vnet IDs created by the azure_instances_eu module"
   value       = { for key, instance in module.azure_instances_eu : key => instance.azure_vnet_id }
 }
 
-output "GCP_VPC_ids" {
+output "gcp_vpc_ids" {
   description = "Map of GCP VPC IDs created by the gcp_instances module"
   value       = { for key, instance in module.gcp_instances : key => instance.gcp_vpc_id }
 }
